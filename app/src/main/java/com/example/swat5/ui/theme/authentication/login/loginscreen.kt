@@ -1,18 +1,25 @@
 package com.example.swat5.ui.theme.authentication.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,8 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -33,12 +44,16 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.swat5.R
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToSignup: () -> Unit = {},
+    onNavigateToForgotPassword: () -> Unit = {}
+) {
     var emailInput by remember { mutableStateOf(TextFieldValue("")) }
     var passwordInput by remember { mutableStateOf(TextFieldValue("")) }
+    var isVisible by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -47,12 +62,18 @@ fun LoginScreen() {
 
         Text(
             text = "JOIN SWAT",
-            color = Color.Blue
+            color = Color.Blue,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Input for email
         OutlinedTextField(
             value = emailInput,
             onValueChange = { emailInput = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             maxLines = 1,
             label = {
                 Text(text = "Email Address")
@@ -74,11 +95,15 @@ fun LoginScreen() {
             )
         )
 
-//        input for password
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // input for password
         OutlinedTextField(
             value = passwordInput,
             onValueChange = { passwordInput = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             maxLines = 1,
+            visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             label = {
                 Text(text = "Password")
             },
@@ -91,11 +116,11 @@ fun LoginScreen() {
             },
             trailingIcon = {
                 IconButton(
-                    onClick = { }
+                    onClick = { isVisible = !isVisible }
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.visible),
-                        contentDescription = "Password",
+                        contentDescription = "Toggle Password",
                         tint = Color.Green
                     )
                 }
@@ -109,6 +134,36 @@ fun LoginScreen() {
                 focusedBorderColor = Color.Green
             )
         )
+
+        Text(
+            text = "Forgot Password?",
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end = 32.dp, top = 8.dp)
+                .clickable { onNavigateToForgotPassword() },
+            color = Color.Blue,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { /* TODO: Login logic */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 32.dp),
+            shape = RoundedCornerShape(32.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+        ) {
+            Text(text = "LOGIN", color = Color.White, fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = { onNavigateToSignup() }) {
+            Text(text = "Don't have an account? Sign Up", color = Color.Blue)
+        }
     }
 }
 

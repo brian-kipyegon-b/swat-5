@@ -2,7 +2,11 @@ package com.example.swat5.ui.theme.authentication.signup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,19 +30,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swat5.R
 import com.example.swat5.ui.theme.authentication.login.LottieAnimationWidget
 
 @Composable
-fun SignupScreen() {
+fun SignupScreen(
+    onNavigateToLogin: () -> Unit = {}
+) {
     var nameInput by remember { mutableStateOf(TextFieldValue("")) }
     var emailInput by remember { mutableStateOf(TextFieldValue("")) }
     var passwordInput by remember { mutableStateOf(TextFieldValue("")) }
+    var isVisible by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -45,13 +57,18 @@ fun SignupScreen() {
 
         Text(
             text = "CREATE ACCOUNT",
-            color = Color.Blue
+            color = Color.Blue,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Name Input
         OutlinedTextField(
             value = nameInput,
             onValueChange = { nameInput = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             maxLines = 1,
             label = { Text(text = "Full Name") },
             leadingIcon = {
@@ -68,10 +85,13 @@ fun SignupScreen() {
             )
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Email Input
         OutlinedTextField(
             value = emailInput,
             onValueChange = { emailInput = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             maxLines = 1,
             label = { Text(text = "Email Address") },
             leadingIcon = {
@@ -88,12 +108,15 @@ fun SignupScreen() {
             )
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Password Input
-        var isVisible by remember { mutableStateOf(false) }
         OutlinedTextField(
             value = passwordInput,
             onValueChange = { passwordInput = it },
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             maxLines = 1,
+            visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             label = { Text(text = "Password") },
             leadingIcon = {
                 Icon(
@@ -118,12 +141,24 @@ fun SignupScreen() {
             )
         )
 
+        Spacer(modifier = Modifier.height(24.dp))
+
         Button(
             onClick = { /* TODO: Signup logic */ },
-            modifier = Modifier.size(width = 280.dp, height = 50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 32.dp),
+            shape = RoundedCornerShape(32.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
         ) {
-            Text(text = "SIGN UP", color = Color.White)
+            Text(text = "SIGN UP", color = Color.White, fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = { onNavigateToLogin() }) {
+            Text(text = "Already have an account? Login", color = Color.Blue)
         }
     }
 }
